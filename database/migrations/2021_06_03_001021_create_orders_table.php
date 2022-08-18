@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->string("questions_file")->nullable();
             $table->string("answers_file")->nullable();
+            $table->string("answers")->nullable();
             $table->string("status");
             $table->timestamps();
         });

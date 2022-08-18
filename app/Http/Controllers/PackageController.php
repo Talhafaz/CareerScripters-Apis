@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Exception;
 use App\Models\Service;
 use App\Models\ServiceType;
 use App\Models\Package;

@@ -13,29 +13,24 @@ class OrderController extends Controller
 {
     public function createOrder(Request $request){
         try {
-            $stripeCharge = $request->user()->charge($request->amount*100, $request->paymentMethodId);
-            if($stripeCharge->charges->data[0]->status == "succeeded"){
-                $order          = new Order;
-                $order->status  = "Order Placed";
-                $order->price   = $request->amount;
-                $order->save();
+            $order          = new Order;
+            $order->status  = "Order Placed";
+            $order->price   = $request->amount;
+            $order->save();
 
-                if($request->type == "service"){
-                    $service = Service::where('id', $request->id)->first();
-                    $order->services()->attach($service);
-                }else{
-                    $package = Package::where('id', $request->id)->first();
-                    $order->packages()->attach($package);
-                }
-                $serviceType = ServiceType::where('id', $request->service_type_id)->first();
-                $order->users()->attach($request->user());
-                $order->serviceTypes()->attach($serviceType);
-                return response()->json(["status"=>"ok","message"=>"Created Succesfully"]);
+            if($request->type == "service"){
+                $service = Service::where('id', $request->id)->first();
+                $order->services()->attach($service);
             }else{
-                return response()->json(["status"=>"ok","message"=>$stripeCharge]);
+                $package = Package::where('id', $request->id)->first();
+                $order->packages()->attach($package);
             }
-            
-        } catch (Exception $e) {
+            $serviceType = ServiceType::where('id', $request->service_type_id)->first();
+            $order->users()->attach($request->user());
+            $order->serviceTypes()->attach($serviceType);
+            return response()->json(["status"=>"ok","message"=>"Created Succesfully", "order"=>$order]);
+        
+    }catch (Exception $e) {
             //throw $th;
         }
     }
@@ -44,6 +39,7 @@ class OrderController extends Controller
         try {
             $order         = Order::find($request->id);
             $order->status = $request->status;
+            $order->answers = $request->answers;
             $order->save();
             return response()->json(['status'=>'ok','message'=>"Uploaded Successfully"]);
         } catch (Exception $e) {
