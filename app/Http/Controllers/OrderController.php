@@ -85,6 +85,7 @@ class OrderController extends Controller
             $order               = Order::find($request->id);
             $order->status       = "Questionnaire Completed";
             $order->answers_file = $filename;
+            $order->answers = $request->answers;
             $order->save();
             return response()->json(['status'=>'ok','message'=>"Uploaded Successfully"]);
         } catch (Exception $e) {
