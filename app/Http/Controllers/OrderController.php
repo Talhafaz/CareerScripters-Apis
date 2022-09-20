@@ -49,6 +49,9 @@ class OrderController extends Controller
             if ($request->chat) {
                 $order->chat = $request->chat;
             }
+            if ($request->resume_details){
+                $order->resume_details = $request->resume_details;
+            }
             $order->save();
             return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);
         } catch (Exception $e) {

@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->string("answers_file")->nullable();
             $table->string("answers")->nullable();
             $table->string("chat")->nullable();
+            $table->string("resume_details")->nullable();
             $table->string("status");
             $table->timestamps();
         });
