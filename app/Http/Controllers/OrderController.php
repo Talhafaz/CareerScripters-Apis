@@ -49,8 +49,33 @@ class OrderController extends Controller
             if ($request->chat) {
                 $order->chat = $request->chat;
             }
-            if ($request->resume_details){
+            if ($request->resume_details) {
                 $order->resume_details = $request->resume_details;
+            }
+            if ($request->files) {
+                $order = Order::with(['serviceTypes', 'services', 'packages', 'users'])->where('id', $request->id)->first();
+                $files = array();
+                if ($order->files != null) {
+                    $files = json_decode($order->files);
+                }
+                try {
+                    $filename = "";
+                    if ($request->hasFile('file')) {
+                        $file      = $request->file('file');
+                        $filename  = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        if (!file_exists(public_path('files/' . $filename))) {
+                            $file->move(public_path('files'), $filename);
+                        }
+                    }
+                    $file = array();
+                    $file['date'] = gmdate("d-m-Y H:i:s");
+                    $file['file'] = $filename;
+                    array_push($files, $file);
+                    $order->files = json_encode($files);
+                } catch (Exception $e) {
+                    return response()->json(["status" => "error", "message" => $e]);
+                }
             }
             $order->save();
             return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);

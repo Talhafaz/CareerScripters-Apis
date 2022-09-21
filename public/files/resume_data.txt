@@ -1,0 +1,70 @@
+{
+    "firstName": "atif",
+    "middleName": "m",
+    "lastName": "ahmed",
+    "phoneNumber": 3154235087,
+    "email": "syedmeasim@gmail.com",
+    "linkdin_url": "linkdin.com",
+    "address": "123",
+    "languages": [
+        {
+            "language_name": "English",
+            "proficiency_level": "Average"
+        }
+    ],
+    "computer_skill": "MS Office Suite, Trello, Jira, HTML",
+    "interpersonal_skill": "Resume Writing, Cover Letter Writing, LinkedIn Profile Optimization",
+    "positions": [
+        {
+            "country_targeted": "USA",
+            "position_title": "Project Manager",
+            "description": "123",
+            "position_link": "google.com",
+            "salary": 120000
+        }
+    ],
+    "expertise1": "123",
+    "expertise2": "123",
+    "academic_degrees": [
+        {
+            "name_of_institute": "abc",
+            "name_of_degree": "abc",
+            "state": "abc",
+            "city": "abc",
+            "starting_date": "2022-01",
+            "ending_date": "2022-01"
+        }
+    ],
+    "certifications": [
+        {
+            "name_of_institute": "abc",
+            "name_of_course": "abc",
+            "state": "abc",
+            "city": "abc",
+            "starting_date": "2022-01",
+            "ending_date": "2022-01"
+        }
+    ],
+    "memberships": [
+        {
+            "name_of_institute": "xyz",
+            "explanation": "xyz",
+            "state": "xyz",
+            "city": "xyz",
+            "starting_date": "2022-01",
+            "ending_date": "2022-02"
+        }
+    ],
+    "experience": [
+        {
+            "name_of_institute": "xyz",
+            "position": "xyz",
+            "starting_date": "2022-01",
+            "ending_date": "2022-01",
+            "state": "xyz",
+            "city": "xyz",
+            "duties": "xyz",
+            "achievements": "xyz"
+        }
+    ]
+}
