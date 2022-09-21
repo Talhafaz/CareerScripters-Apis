@@ -81,9 +81,9 @@ class OrderController extends Controller
                     $file['file'] = $filename;
                     $file['file_path'] = $filePath;
                     if ($request->fileStatus) {
-                        $file['file-status'] = $request->fileStatus;
+                        $file['file_status'] = $request->fileStatus;
                     }else {
-                        $file['file-status'] = 'others';
+                        $file['file_status'] = 'others';
                     }
                     array_push($files, $file);
                     $order->files = json_encode($files);
