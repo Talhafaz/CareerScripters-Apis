@@ -59,13 +59,15 @@ class OrderController extends Controller
                     $files = json_decode($order->files);
                 }
                 try {
+                    $id =$request->id;
+                    $path =  'files/'.$id;
                     $filename = "";
                     if ($request->hasFile('file')) {
                         $file      = $request->file('file');
                         $filename  = $file->getClientOriginalName();
                         $extension = $file->getClientOriginalExtension();
-                        if (!file_exists(public_path('files/' . $filename))) {
-                            $file->move(public_path('files'), $filename);
+                        if (!file_exists(public_path($path . $filename))) {
+                            $file->move(public_path($path), $filename);
                         }
                     }
                     $file = array();
