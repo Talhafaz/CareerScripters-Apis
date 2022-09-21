@@ -71,9 +71,9 @@ class OrderController extends Controller
                             $file->move(public_path($path), $filename);
                             $filePath = $path .'/'. $filename;
                         }else{
-                            $filename = gmdate("His").$filename;
-                            $file->move(public_path($path), $filename);
-                            $filePath = $path .'/'. $filename;
+                            $fname = gmdate("His").$filename;
+                            $file->move(public_path($path), $fname);
+                            $filePath = $path .'/'. $fname;
                         }
                     }
                     $file = array();
