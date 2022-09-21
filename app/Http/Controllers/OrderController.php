@@ -59,20 +59,32 @@ class OrderController extends Controller
                     $files = json_decode($order->files);
                 }
                 try {
-                    $id =$request->id;
-                    $path =  'files/'.$id;
+                    $id = $request->id;
+                    $path =  'files/' . $id;
+                    $filePath = "";
                     $filename = "";
                     if ($request->hasFile('file')) {
                         $file      = $request->file('file');
                         $filename  = $file->getClientOriginalName();
                         $extension = $file->getClientOriginalExtension();
-                        if (!file_exists(public_path($path . $filename))) {
+                        if (!file_exists(public_path($path .'/'. $filename))) {
                             $file->move(public_path($path), $filename);
+                            $filePath = $path .'/'. $filename;
+                        }else{
+                            $filename = gmdate("His").$filename;
+                            $file->move(public_path($path), $filename);
+                            $filePath = $path .'/'. $filename;
                         }
                     }
                     $file = array();
                     $file['date'] = gmdate("d-m-Y H:i:s");
                     $file['file'] = $filename;
+                    $file['file_path'] = $filePath;
+                    if ($request->fileStatus) {
+                        $file['file-status'] = $request->fileStatus;
+                    }else {
+                        $file['file-status'] = 'others';
+                    }
                     array_push($files, $file);
                     $order->files = json_encode($files);
                 } catch (Exception $e) {
