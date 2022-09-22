@@ -40,6 +40,7 @@ class OrderController extends Controller
     {
         try {
             $order         = Order::find($request->id);
+            $res = array();
             if ($request->status) {
                 $order->status = $request->status;
             }
@@ -52,7 +53,7 @@ class OrderController extends Controller
             if ($request->resume_details) {
                 $order->resume_details = $request->resume_details;
             }
-            if ($request->files) {
+            if ($request->file) {
                 $order = Order::with(['serviceTypes', 'services', 'packages', 'users'])->where('id', $request->id)->first();
                 $files = array();
                 if ($order->files != null) {
@@ -80,6 +81,9 @@ class OrderController extends Controller
                     $file['date'] = gmdate("d-m-Y H:i:s");
                     $file['file'] = $filename;
                     $file['file_path'] = $filePath;
+
+                    $res['file'] = $filename;
+                    $res['file_path']=$filePath;
                     if ($request->fileStatus) {
                         $file['file_status'] = $request->fileStatus;
                     }else {
@@ -92,7 +96,10 @@ class OrderController extends Controller
                 }
             }
             $order->save();
-            return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);
+           if($request->file){
+               return response()->json(['status' => 'ok', 'message' => "uploaded Successfully", 'data'=>$res]);
+           }else
+            {return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);}
         } catch (Exception $e) {
             return response()->json(["status" => "error", "message" => $e]);
         }
