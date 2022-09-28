@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
         try {
             $order          = new Order;
-            $order->status  = "Order Placed";
+            $order->status  = "1";
             $order->price   = $request->amount;
             $order->save();
 
@@ -142,7 +142,7 @@ class OrderController extends Controller
             }
 
             $order               = Order::find($request->id);
-            $order->status       = "Questionnaire Completed";
+            $order->status       = "2";
             $order->answers_file = $filename;
             $order->answers = $request->answers;
             $order->save();
