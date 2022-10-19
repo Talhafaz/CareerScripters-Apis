@@ -28,6 +28,11 @@ class UserController extends Controller
 
     public function register(Request $request){
         try {
+            $user = User::where('email',$request->email)->first();
+            if($user){
+                return response("user already exist",400);
+            }
+            else{
             $adminRole   = Role::where('name', $request->role)->first();
             $admin       = User::create([
                 'name'     => $request->name,
@@ -36,7 +41,7 @@ class UserController extends Controller
             ]);
             $admin->roles()->attach($adminRole);
 
-            return response()->json(["status"=>"ok","message"=>"Registered Succefully"]);
+            return response()->json(["status"=>"ok","message"=>"Registered Succefully"]);}
         } catch (Exception $e) {
             return response()->json(["status"=>"error","message"=>$e]);
         }
