@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/rooj584bls41/public_html/api.resumescripters.com
+    - /bin/cp * $DEPLOYPATH
