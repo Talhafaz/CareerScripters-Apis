@@ -69,7 +69,6 @@ class CritiqueController extends Controller
                                 error_log($critique);
                                 $critique->users()->attach($user);
             
-                                return response()->json(["status" => "ok", "message" => "Created Succesfully"]);
                             }
                         } catch (Exception $e) {
                             return response()->json(["status" => "error", "message" => $e]);
