@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+//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
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
@@ -56,5 +56,15 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response()->json(["status"=>"error","message"=>$e]);
         }
+    }
+    Public function generatePassword() {
+        $length = 10;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

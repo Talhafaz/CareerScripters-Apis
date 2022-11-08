@@ -66,12 +66,14 @@ Route::middleware('auth:api')->group(function(){
     Route::get("get-orders-by-user",[OrderController::class, 'getOrdersByUser']);
 
     // Critiques
-    Route::post("create-critique",[CritiqueController::class, 'createCritique']);
     Route::post("update-critique",[CritiqueController::class, 'updateCritique']);
     Route::get("get-critiques",[CritiqueController::class, 'getCritiques']);
     Route::get("get-critique/{id}",[CritiqueController::class, 'getCritiqueById']);
     Route::get("get-critiques-by-user",[CritiqueController::class, 'getCritiquesByUser']);
 });
+
+// Critiques
+Route::post("create-critique",[CritiqueController::class, 'createCritique']);
 
 // Blogs
 Route::get("get-blogs",[BlogController::class, 'getBlogs']);
