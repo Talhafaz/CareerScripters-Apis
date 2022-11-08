@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Critique;
 use App\Models\CritiqueIndustry;
@@ -8,6 +10,7 @@ use App\Models\CritiqueGrammarComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Exception;
+use PhpParser\Node\Stmt\TryCatch;
 
 class CritiqueController extends Controller
 {
@@ -32,7 +35,7 @@ class CritiqueController extends Controller
                     $critique->status = "Pending";
                     $critique->save();
                     error_log($critique);
-                    $critique->users()->attach($request->user());
+                    $critique->users()->attach($user);
 
                     return response()->json(["status" => "ok", "message" => "Created Succesfully"]);
                 } else {
@@ -46,24 +49,52 @@ class CritiqueController extends Controller
                     $req->role = 'User';
                     $response = app(UserController::class)->register($req);
                     if ($response->original['status'] == 'ok') {
+                        try {
+                            $user = User::where('email', $email)->first();
+                            error_log($user);
 
-                        app(CritiqueController::class)->createCritique($request);
-
-                        $emailBody= "<html><head></head><body><p>Hello $name,</p>We've reveived request for resume critique,</p>
+                            if ($user) {
+                                if ($request->hasFile('file')) {
+                                    $file      = $request->file('file');
+                                    $filename  = $file->getClientOriginalName();
+                                    $extension = $file->getClientOriginalExtension();
+                                    if (!file_exists(public_path('critiques/' . $filename))) {
+                                        $file->move(public_path('critiques'), $filename);
+                                    }
+                                }
+                                $critique         = new Critique;
+                                $critique->file   = $filename;
+                                $critique->status = "Pending";
+                                $critique->save();
+                                error_log($critique);
+                                $critique->users()->attach($user);
+            
+                                return response()->json(["status" => "ok", "message" => "Created Succesfully"]);
+                            }
+                        } catch (Exception $e) {
+                            return response()->json(["status" => "error", "message" => $e]);
+                        }
+                        try {
+                            $emailBody = "<html><head></head><body><p>Hello $name,</p>We've reveived request for resume critique,</p>
                         <p>You check status of critique on user dashboard.</p>
                         <p><strong>Username :</strong> $email</p>
                         <p><strong>Password :</strong> $password</p></body></html>";
-                        $body = array();
-                        $body['sender']['name']='Resume scripters';
-                        $body['sender']['email']='talz@atomicchain.com';
-                        $body['to'][0]['email']=$email;
-                        $body['to'][0]['name']=$name;
-                        $body['subject']='Resume scripters - Critique Request';
-                        $body['htmlContent']=$emailBody;
-                        $response = Http::withHeaders(['api-key' => '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', 'content-type' => 'application/json'])
-                            ->send('POST', 'https://api.sendinblue.com/v3/smtp/email', [
-                                'body' => json_encode($body)
-                            ])->json();
+                            error_log($email);
+                            $body = array();
+                            $body['sender']['name'] = 'Resume scripters';
+                            $body['sender']['email'] = 'info@resumescripters.com';
+                            $body['to'][0]['email'] = $email;
+                            $body['to'][0]['name'] = $name;
+                            $body['subject'] = 'Resume scripters - Critique Request';
+                            $body['htmlContent'] = $emailBody;
+                            $response = Http::withHeaders(['api-key' => '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', 'content-type' => 'application/json'])
+                                ->send('POST', 'https://api.sendinblue.com/v3/smtp/email', [
+                                    'body' => json_encode($body)
+                                ])->json();
+                                error_log(json_encode($response));
+                        } catch (Exception $e) {
+                            return response("Error sending email",400);
+                        }
                     }
                     return response()->json(["status" => "ok", "message" => "Created Succesfully"]);
                 }
