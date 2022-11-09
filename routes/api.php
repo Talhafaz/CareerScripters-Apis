@@ -75,6 +75,9 @@ Route::middleware('auth:api')->group(function(){
 // Critiques
 Route::post("create-critique",[CritiqueController::class, 'createCritique']);
 
+//Stripe
+Route::post("stripe",[OrderController::class, 'stripe']);
+
 // Blogs
 Route::get("get-blogs",[BlogController::class, 'getBlogs']);
 Route::get("get-blog/{id}",[BlogController::class, 'getBlogById']);

@@ -68,13 +68,13 @@ class OrderController extends Controller
                         $file      = $request->file('file');
                         $filename  = $file->getClientOriginalName();
                         $extension = $file->getClientOriginalExtension();
-                        if (!file_exists(public_path($path .'/'. $filename))) {
+                        if (!file_exists(public_path($path . '/' . $filename))) {
                             $file->move(public_path($path), $filename);
-                            $filePath = $path .'/'. $filename;
-                        }else{
-                            $fname = gmdate("His").$filename;
+                            $filePath = $path . '/' . $filename;
+                        } else {
+                            $fname = gmdate("His") . $filename;
                             $file->move(public_path($path), $fname);
-                            $filePath = $path .'/'. $fname;
+                            $filePath = $path . '/' . $fname;
                         }
                     }
                     $file = array();
@@ -83,10 +83,10 @@ class OrderController extends Controller
                     $file['file_path'] = $filePath;
 
                     $res['file'] = $filename;
-                    $res['file_path']=$filePath;
+                    $res['file_path'] = $filePath;
                     if ($request->fileStatus) {
                         $file['file_status'] = $request->fileStatus;
-                    }else {
+                    } else {
                         $file['file_status'] = 'others';
                     }
                     array_push($files, $file);
@@ -96,10 +96,11 @@ class OrderController extends Controller
                 }
             }
             $order->save();
-           if($request->file){
-               return response()->json(['status' => 'ok', 'message' => "uploaded Successfully", 'data'=>$res]);
-           }else
-            {return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);}
+            if ($request->file) {
+                return response()->json(['status' => 'ok', 'message' => "uploaded Successfully", 'data' => $res]);
+            } else {
+                return response()->json(['status' => 'ok', 'message' => "Updated Successfully"]);
+            }
         } catch (Exception $e) {
             return response()->json(["status" => "error", "message" => $e]);
         }
@@ -189,6 +190,36 @@ class OrderController extends Controller
         try {
         } catch (Exception $e) {
             //throw $th;
+        }
+    }
+
+    public function stripe(Request $request)
+    {
+        try {
+            $key = env("STRIPE_KEY", "sk_test_51GsRqCHBOqdNhpQrAJFlmes90OIjvVtNHlxPZNXOoeAeZlhS7BfxKEgcgGcjKFD1deYZJ7PGPybicAeEEtLnJSBb00VOmeCP2z");
+
+            $stripe = new \Stripe\StripeClient($key);
+            $result = $stripe->charges->create([
+                'amount' => ($request->amount * 100),
+                'currency' => $request->currency,
+                'source' => $request->stoken,
+                'capture' => false,
+            ]);
+            // error_log($result);
+            if ($result->status == 'succeeded') {
+                $response = $stripe->charges->capture($result->id);
+                if ($response->status == 'succeeded' & ($response->captured == true || $response->captured == 'true')) {
+                    return response()->json(["status" => 200, "message" => "Payment captured successfully", "trn" => $response->id]);
+                }else{
+                    return response()->json(["status" => 400, "message" => "Failed to capture payment"]);
+
+                }
+            }else{
+                return response()->json(["status" => 400, "message" => "Failed to capture payment"]);
+
+            }
+        } catch (Exception $e) {
+            return response()->json(["status" => "error", "message" => $e]);
         }
     }
 }
