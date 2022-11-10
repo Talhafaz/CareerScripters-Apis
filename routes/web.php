@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response('{"status":404,"message":"Not Found"}',404);
+});
+Route::get('/no-auth', function () {
+    return response('{"status":401,"message":"Unauthorized"}', 401);
 });

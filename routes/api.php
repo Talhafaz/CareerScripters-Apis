@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function(){
     //     return $request->user();
     // });
     Route::get('/user',[UserController::class, 'getUser']);
+    Route::post('/updateUser',[UserController::class, 'updateUser']);
     // Blogs
     Route::post("create-blog",[BlogController::class, 'createBlog']);
     Route::post("update-blog",[BlogController::class, 'updateBlog']);

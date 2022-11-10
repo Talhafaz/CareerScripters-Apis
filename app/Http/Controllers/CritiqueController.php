@@ -21,7 +21,6 @@ class CritiqueController extends Controller
             if ($request->email) {
                 $user = User::where('email', $request->email)->first();
                 if ($user) {
-                    error_log($user);
                     if ($request->hasFile('file')) {
                         $file      = $request->file('file');
                         $filename  = $file->getClientOriginalName();
