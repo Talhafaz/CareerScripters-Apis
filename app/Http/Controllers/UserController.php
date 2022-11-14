@@ -74,13 +74,20 @@ class UserController extends Controller
                 if ($request->hasFile('picture')) {
                     $file      = $request->file('picture');
                     $extension = $file->getClientOriginalExtension();
-                    $filename  = $id.'.'. $extension;
+                    $filename  = $id . '.' . $extension;
                     $file->move(public_path($path), $filename);
                 }
                 $user->profile_pic = $filename;
             }
+            if ($request->new_password) {
+                if (HASH::check($request->password, $user->password)) {
+                    $user->password = Hash::make($request->new_password);
+                } else {
+                    return response("Password is incorrect", 400);
+                }
+            }
             $user->save();
-            return response()->json(['status' => 200,'message' => 'Profile Updated', 'user' => $user]);
+            return response()->json(['status' => 200, 'message' => 'Profile Updated', 'user' => $user]);
         } catch (Exception $e) {
             return response()->json(["status" => "error", "message" => $e]);
         }
