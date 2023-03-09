@@ -34,46 +34,60 @@ class SamplesController extends Controller
         }
     }
 
-    public function updateSample(Request $request){
-        try{
-            if($request->id){
+    public function updateSample(Request $request)
+    {
+        try {
+            if ($request->id) {
                 $sample = Sample::find($request->id);
-                $sample->name       = $request->name;
-                $sample->category = $request->category;
-
+                if ($request->name) {
+                    $sample->name       = $request->name;
+                }
+                if ($request->category) {
+                    $sample->category = $request->category;
+                }
                 $sample->save();
-
-
-            return response()->json(["status" => "ok", "message" => "Update Succesfully"]);
+                return response()->json(["status" => "ok", "message" => "Update Succesfully"]);
             }
         } catch (Exception $e) {
-            return response()->json(["status"=>"error","message"=>$e]);
+            return response()->json(["status" => "error", "message" => $e]);
         }
     }
-    public function getSample(){
+    public function getSample()
+    {
         try {
             $samples = Sample::all();
-            return response()->json(['status'=>'ok','samples'=>$samples]);
+            return response()->json(['status' => 'ok', 'samples' => $samples]);
         } catch (Exception $e) {
-            return response()->json(["status"=>"error","message"=>$e]);
+            return response()->json(["status" => "error", "message" => $e]);
         }
     }
 
-    public function getSampleById($id){
+    public function getSampleById($id)
+    {
         try {
             $sample = Sample::where('id', $id)->first();
-            return response()->json(['status'=>'ok','sample'=>$sample]);
+            return response()->json(['status' => 'ok', 'sample' => $sample]);
         } catch (Exception $e) {
-            return response()->json(["status"=>"error","message"=>$e]);
+            return response()->json(["status" => "error", "message" => $e]);
         }
     }
-    public function deleteSampleById($id){
+    public function getSampleByCategoryId($cid)
+    {
+        try {
+            $sample = Sample::all()->where('category', $cid);
+            return response()->json(['status' => 'ok', 'sample' => $sample]);
+        } catch (Exception $e) {
+            return response()->json(["status" => "error", "message" => $e]);
+        }
+    }
+    public function deleteSampleById($id)
+    {
         try {
             $sample = Sample::find($id);
             $sample->delete();
-            return response()->json(['status'=>'ok','message'=>'Succesfully Deleted']);
+            return response()->json(['status' => 'ok', 'message' => 'Succesfully Deleted']);
         } catch (Exception $e) {
-            return response()->json(["status"=>"error","message"=>$e]);
+            return response()->json(["status" => "error", "message" => $e]);
         }
     }
 }
