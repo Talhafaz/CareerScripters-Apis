@@ -9,6 +9,8 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CritiqueController;
+use App\Http\Controllers\SamplesController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,6 @@ Route::middleware('auth:api')->group(function(){
     // Testimonials End
 
     // Orders
-    Route::post("create-order",[OrderController::class, 'createOrder']);
     Route::post("update-order",[OrderController::class, 'updateOrder']);
     Route::post("upload-questions",[OrderController::class, 'uploadQuestionsFile']);
     Route::post("upload-answers",[OrderController::class, 'uploadAnswersFile']);
@@ -71,7 +72,21 @@ Route::middleware('auth:api')->group(function(){
     Route::get("get-critiques",[CritiqueController::class, 'getCritiques']);
     Route::get("get-critique/{id}",[CritiqueController::class, 'getCritiqueById']);
     Route::get("get-critiques-by-user",[CritiqueController::class, 'getCritiquesByUser']);
+
+    //samples
+    Route::post("create-sample",[SamplesController::class, 'createSample']);
+    Route::post("update-sample",[SamplesController::class, 'updateSample']);
+    Route::get("delete-sample/{id}",[SamplesController::class, 'deleteSampleById']);
 });
+
+Route::get("get-sample",[SamplesController::class, 'getSample']);
+Route::get("get-sample/{id}",[SamplesController::class, 'getSampleById']);
+
+//create order
+Route::post("create-order",[OrderController::class, 'createOrder']);
+
+// Reset Password
+Route::post("reset-password",[UserController::class, 'forgotPassword']);
 
 // Critiques
 Route::post("create-critique",[CritiqueController::class, 'createCritique']);

@@ -10,7 +10,6 @@ use App\Models\CritiqueGrammarComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Exception;
-use PhpParser\Node\Stmt\TryCatch;
 
 class CritiqueController extends Controller
 {
@@ -78,7 +77,7 @@ class CritiqueController extends Controller
                         <p><strong>Username :</strong> $email</p>
                         <p><strong>Password :</strong> $password</p></body></html>";
                             error_log($email);
-                            $smtpKey = env("SMTP_KEY", "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");
+                            $smtpKey = env("SMTP_KEY", "xkeysib-vxvxcvbcx-FTbDsPcqU375dr9X");
 
                             $body = array();
                             $body['sender']['name'] = 'Resume scripters';

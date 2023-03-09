@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Exception;
 
 class UserController extends Controller
@@ -91,6 +92,42 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response()->json(["status" => "error", "message" => $e]);
         }
+    }
+    public function forgotPassword(Request $request){
+        $user = User::where('email', $request->email)->first();
+            if ($user) {
+                $password = app(UserController::class)->generatePassword();
+                $user->password = Hash::make($password);
+                try {
+                    $emailBody = "<html><head></head><body><p>Hello $user->name,</p>You are receiving this e-mail because you requested a password reset for your user account at Resume Scripters,</p>
+                <p><strong>Username :</strong> $request->email</p>
+                <p><strong>Password :</strong> $password</p>
+                <br>
+                <p>It's a temporary password, Please change it from your profile settings.</p></body></html>";
+                    $smtpKey = env("SMTP_KEY", "xkeysib-vxvxcvbcx-FTbDsPcqU375dr9X");
+
+                    $body = array();
+                    $body['sender']['name'] = 'Resume scripters';
+                    $body['sender']['email'] = 'info@resumescripters.com';
+                    $body['to'][0]['email'] = $request->email;
+                    $body['to'][0]['name'] = $user->name;
+                    $body['subject'] = 'Resume scripters - Critique Request';
+                    $body['htmlContent'] = $emailBody;
+                    $response = Http::withHeaders(['api-key' => $smtpKey, 'content-type' => 'application/json'])
+                        ->send('POST', 'https://api.sendinblue.com/v3/smtp/email', [
+                            'body' => json_encode($body)
+                        ])->json();
+                        error_log(json_encode($response));
+                } catch (Exception $e) {
+                    return response("Error sending email",400);
+                }
+                $user->save();
+                return response()->json(['status' => 200, 'message' => 'Password reset', 'user' => $user]);
+            }
+            else{
+                return response("No user exist with this email", 400);
+            }
+        
     }
     public function generatePassword()
     {
